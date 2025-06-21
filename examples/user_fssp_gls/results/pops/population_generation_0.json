@@ -1,0 +1,26 @@
+[
+     {
+          "algorithm": "The algorithm updates the execution time matrix by adding random noise to simulate perturbations and selects the top jobs to perturb based on the highest total execution times across all machines to escape local optima in scheduling.",
+          "code": "import numpy as np\n\ndef get_matrix_and_jobs(current_sequence, time_matrix, m, n):\n    noise = np.random.normal(0, 1, (n, m))\n    new_matrix = time_matrix + noise\n    total_times = np.sum(new_matrix, axis=1)\n    perturb_jobs = np.argsort(total_times)[-int(0.1 * n):]  # Select top 10% jobs\n    return new_matrix, perturb_jobs",
+          "objective": 3570.66667,
+          "other_inf": null
+     },
+     {
+          "algorithm": "The algorithm updates the execution time matrix by introducing random noise to avoid local optima and selects the top k jobs with the highest total execution time for perturbation to minimize makespan.",
+          "code": "import numpy as np\n\ndef get_matrix_and_jobs(current_sequence, time_matrix, m, n):\n    noise = np.random.normal(0, 0.1, (n, m))\n    new_matrix = time_matrix + noise\n    total_times = np.sum(new_matrix, axis=1)\n    perturb_jobs = np.argsort(total_times)[-int(n*0.2):]  # Select top 20% jobs\n    return new_matrix, perturb_jobs",
+          "objective": 3573.0,
+          "other_inf": null
+     },
+     {
+          "algorithm": "The algorithm updates the execution time matrix by adding a small random noise to each element and selects the top jobs to perturb based on the highest total execution time across all machines to avoid local optima and minimize makespan.",
+          "code": "import numpy as np\n\ndef get_matrix_and_jobs(current_sequence, time_matrix, m, n):\n    noise = np.random.rand(n, m) * 0.1\n    new_matrix = time_matrix + noise\n    total_times = np.sum(new_matrix, axis=1)\n    perturb_jobs = np.argsort(total_times)[-int(0.1*n):] if n > 1 else [0]\n    return new_matrix, perturb_jobs",
+          "objective": 3574.33333,
+          "other_inf": null
+     },
+     {
+          "algorithm": "The algorithm updates the execution time matrix by introducing random noise and selects the top jobs with the highest total execution time across all machines to perturb, aiming to escape local optima and minimize makespan.",
+          "code": "import numpy as np\n\ndef get_matrix_and_jobs(current_sequence, time_matrix, m, n):\n    noise = np.random.normal(0, 0.1, (n, m))\n    new_matrix = time_matrix + noise\n    total_times = np.sum(new_matrix, axis=1)\n    perturb_jobs = np.argsort(total_times)[-int(0.1 * n):]  # Select top 10% jobs to perturb\n    return new_matrix, perturb_jobs",
+          "objective": 3578.33333,
+          "other_inf": null
+     }
+]

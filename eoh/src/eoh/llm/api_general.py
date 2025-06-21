@@ -17,7 +17,8 @@ class InterfaceAPI:
                 "messages": [
                     # {"role": "system", "content": "You are a helpful assistant."},
                     {"role": "user", "content": prompt_content}
-                ],
+                ],  #gpt deepseek 
+                # "prompt": prompt_content,  # For Qwen-Completions, use "prompt" instead of "messages"
             }
         )
 
@@ -36,12 +37,15 @@ class InterfaceAPI:
                 return response
             try:
                 conn = http.client.HTTPSConnection(self.api_endpoint)
-                conn.request("POST", "/v1/chat/completions", payload_explanation, headers)
+                # conn.request("POST", "/v1/chat/completions", payload_explanation, headers) #gpt  
+                conn.request("POST", "/compatible-mode/v1/chat/completions", payload_explanation, headers) #qwen
+                # conn.request("POST", "/chat/completions", payload_explanation, headers) #deepseek
                 res = conn.getresponse()
                 data = res.read()
+                print(data)
                 json_data = json.loads(data)
-                response = json_data["choices"][0]["message"]["content"]
-                break
+                response = json_data["choices"][0]["message"]["content"] #gpt deepseek 
+                # response = json_data["choices"][0]["text"] # qwen For Qwen-Completions
             except:
                 if self.debug_mode:
                     print("Error in API. Restarting the process...")

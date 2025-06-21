@@ -1,0 +1,6 @@
+{
+     "algorithm": "The new algorithm introduces a dynamic noise adjustment mechanism based on the current sequence's performance and selects jobs for perturbation using a weighted sum of their execution times and their deviation from the mean execution time.",
+     "code": "import numpy as np\n\ndef get_matrix_and_jobs(current_sequence, time_matrix, m, n):\n    mean_time = np.mean(time_matrix)\n    std_dev = np.std(time_matrix)\n    noise = np.random.normal(0, std_dev / 5, (n, m))  # Smaller noise based on standard deviation\n    new_matrix = time_matrix + noise\n    \n    weighted_times = np.sum(new_matrix, axis=1) + np.abs(new_matrix.mean(axis=1) - mean_time)\n    perturb_jobs = np.argsort(weighted_times)[-int(n*0.15):]  # Select top 15% jobs\n    \n    return new_matrix, perturb_jobs",
+     "objective": 3503.66667,
+     "other_inf": null
+}

@@ -1,0 +1,6 @@
+{
+     "algorithm": "Novel algorithm: The algorithm first calculates the makespan of the current sequence based on the time matrix, then randomly selects a subset of jobs to perturb based on their execution times, updates the time matrix by increasing the execution time of the selected jobs on all machines by a fixed percentage, and finally returns the updated matrix and the list of perturbed jobs.",
+     "code": "import numpy as np\n\ndef get_matrix_and_jobs(current_sequence, time_matrix, m, n):\n    current_makespan = np.max(np.sum(time_matrix[current_sequence], axis=0))\n    job_execution_times = np.sum(time_matrix, axis=1)\n    top_jobs = np.argsort(job_execution_times)[::-1][:n//2]\n    perturb_jobs = np.random.choice(top_jobs, size=n//4, replace=False)\n    perturb_percentage = 0.1\n    new_matrix = time_matrix.copy()\n    \n    for job in perturb_jobs:\n        for machine in range(m):\n            new_matrix[job][machine] *= (1 + perturb_percentage)\n    \n    return new_matrix, perturb_jobs",
+     "objective": 3484.66667,
+     "other_inf": null
+}

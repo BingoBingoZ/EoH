@@ -1,0 +1,26 @@
+[
+     {
+          "algorithm": "The new algorithm introduces a dynamic noise adjustment mechanism based on the current sequence's performance and selects jobs for perturbation using a weighted sum of their execution times and their deviation from the mean execution time.",
+          "code": "import numpy as np\n\ndef get_matrix_and_jobs(current_sequence, time_matrix, m, n):\n    mean_time = np.mean(time_matrix)\n    std_dev = np.std(time_matrix)\n    noise = np.random.normal(0, std_dev / 5, (n, m))  # Smaller noise based on standard deviation\n    new_matrix = time_matrix + noise\n    \n    weighted_times = np.sum(new_matrix, axis=1) + np.abs(new_matrix.mean(axis=1) - mean_time)\n    perturb_jobs = np.argsort(weighted_times)[-int(n*0.15):]  # Select top 15% jobs\n    \n    return new_matrix, perturb_jobs",
+          "objective": 3503.66667,
+          "other_inf": null
+     },
+     {
+          "algorithm": "The new algorithm calculates a perturbation score based on the range of execution times for each job and applies a weighted random selection to choose jobs for perturbation, ensuring diversity in exploration.",
+          "code": "import numpy as np\n\ndef get_matrix_and_jobs(current_sequence, time_matrix, m, n):\n    range_scores = np.ptp(time_matrix, axis=1)\n    weights = range_scores / np.sum(range_scores)\n    noise_levels = weights * 0.1\n    noise = np.random.normal(0, noise_levels[:, np.newaxis], (n, m))\n    new_matrix = time_matrix + noise\n    perturb_jobs = np.random.choice(n, size=int(n*0.2), replace=False, p=weights)\n    return new_matrix, perturb_jobs",
+          "objective": 3518.66667,
+          "other_inf": null
+     },
+     {
+          "algorithm": "The new algorithm calculates a perturbation score based on the maximum execution time for each job and applies a weighted random selection to choose jobs for perturbation, ensuring diversity in exploration.",
+          "code": "import numpy as np\n\ndef get_matrix_and_jobs(current_sequence, time_matrix, m, n):\n    max_times = np.max(time_matrix, axis=1)\n    weights = max_times / np.sum(max_times)\n    noise_levels = weights * 0.1\n    noise = np.random.normal(0, noise_levels[:, np.newaxis], (n, m))\n    new_matrix = time_matrix + noise\n    perturb_jobs = np.random.choice(n, size=int(n*0.2), replace=False, p=weights)\n    return new_matrix, perturb_jobs",
+          "objective": 3521.33333,
+          "other_inf": null
+     },
+     {
+          "algorithm": "The new algorithm calculates a perturbation score based on the coefficient of variation of the execution times for each job and applies a weighted random selection to choose jobs for perturbation, ensuring diversity in exploration.",
+          "code": "import numpy as np\n\ndef get_matrix_and_jobs(current_sequence, time_matrix, m, n):\n    mean_times = np.mean(time_matrix, axis=1)\n    std_devs = np.std(time_matrix, axis=1)\n    cv_scores = std_devs / mean_times\n    weights = cv_scores / np.sum(cv_scores)\n    noise_levels = weights * 0.1\n    noise = np.random.normal(0, noise_levels[:, np.newaxis], (n, m))\n    new_matrix = time_matrix + noise\n    perturb_jobs = np.random.choice(n, size=int(n*0.2), replace=False, p=weights)\n    return new_matrix, perturb_jobs",
+          "objective": 3522.33333,
+          "other_inf": null
+     }
+]
